@@ -7,10 +7,17 @@ from requests.adapters import HTTPAdapter
 import time
 from urllib3.util.retry import Retry
 from datetime import datetime
-import traceback 
+
+from configparser import ConfigParser
+parser = ConfigParser()
+from supabase import create_client
 
 with open('api_key.txt', 'r') as file:
     api_key = file.read().strip()
+
+url = str(parser.get('supabase', 'SUPABASE_URL'))
+key= str(parser.get('supabase', 'SUPABASE_KEY'))
+supabase = create_client(url, key)
 
 def api_get_puuid(summonerId=None, gameName=None, tagLine=None, region='europe'):
     """Gets the puuid from a summonerId or riot_id and riot_tag
@@ -81,6 +88,7 @@ def api_get_match_history_ids(puuid=None, region='europe', start=0, count=10):
     except Exception as e:
         print(f"An error occurred: {e}")
         return False
+
 def process_match_json_reporting(match_json):
     """Processes the match json into a dataframe.
 
