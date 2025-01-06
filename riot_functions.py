@@ -10,14 +10,17 @@ from datetime import datetime
 
 from configparser import ConfigParser
 parser = ConfigParser()
-from supabase import create_client
+parser.read('config.ini')
 
-with open('api_key.txt', 'r') as file:
-    api_key = file.read().strip()
-
+# from supabase import create_client
 url = str(parser.get('supabase', 'SUPABASE_URL'))
 key= str(parser.get('supabase', 'SUPABASE_KEY'))
-supabase = create_client(url, key)
+api_key = str(parser.get('riot_api', 'api_key'))
+api_key = "api_key="+api_key
+# supabase = create_client(url, key)
+
+
+
 
 def api_get_puuid(summonerId=None, gameName=None, tagLine=None, region='europe'):
     """Gets the puuid from a summonerId or riot_id and riot_tag
@@ -45,6 +48,7 @@ def api_get_puuid(summonerId=None, gameName=None, tagLine=None, region='europe')
         endpoint = f'riot/account/v1/accounts/by-riot-id/{gameName}/{tagLine}'
     
         response = requests.get(root_url+endpoint+'?'+api_key)
+        print(root_url+endpoint+'?'+api_key)
         if response.status_code == 429:
             print("Sleeping...")
             time.sleep(121)
@@ -371,6 +375,7 @@ def api_get_match_history_puuid(list_puuid, region='europe', debug=False, report
         except: 
             None
         return df
+    
     else:
         # If there are no new matches to process, print a message and return an empty DataFrame
         print(f'No matches')

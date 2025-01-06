@@ -6,16 +6,21 @@ import numpy as np
 import pandas as pd
 import streamlit as st
 
+from configparser import ConfigParser
+parser = ConfigParser()
+parser.read('config.ini')
+
 # Show app title and description.
 st.set_page_config(page_title="Zerance Trinkets", page_icon="🎫")
 st.title("🎫 Zerance Trinkets")
 
-puuid = api_get_puuid(gameName='Snow QLF', tagLine='EUW')
+
+puuid = api_get_puuid(gameName='Cocow', tagLine='EUW')
 st.write(puuid)
 
 list_puuid_test = ['ApGw0jnnexmrtyjhZ9LKR0Voq9QVGjOrO2TzGslcFgajnB09gTxHe5GncFlj5Ifw16ht8DG5w3vQhQ',
                    'pYmXkPJ0XpFaOxx90TvmIvDovUnV199qzo4d8fq-D_c563W2w5gVK_1MZY0qqO_mI6Zo94THFHj_mg']
-st.write(api_get_match_history_puuid(list_puuid_test))
+# st.write(api_get_match_history_puuid(list_puuid_test))
 
 #ApGw0jnnexmrtyjhZ9LKR0Voq9QVGjOrO2TzGslcFgajnB09gTxHe5GncFlj5Ifw16ht8DG5w3vQhQ GULLDIZ
 #pYmXkPJ0XpFaOxx90TvmIvDovUnV199qzo4d8fq-D_c563W2w5gVK_1MZY0qqO_mI6Zo94THFHj_mg SNOW
