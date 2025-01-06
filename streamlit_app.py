@@ -1,22 +1,42 @@
 import datetime
 import random
-
+from riot_functions import *
 import altair as alt
 import numpy as np
 import pandas as pd
 import streamlit as st
 
 # Show app title and description.
-st.set_page_config(page_title="Support tickets", page_icon="🎫")
-st.title("🎫 Support tickets")
-st.write(
-    """
-    This app shows how you can build an internal tool in Streamlit. Here, we are 
-    implementing a support ticket workflow. The user can create a ticket, edit 
-    existing tickets, and view some statistics.
-    """
-)
+st.set_page_config(page_title="Zerance Trinkets", page_icon="🎫")
+st.title("🎫 Zerance Trinkets")
 
+puuid = api_get_puuid(gameName='Snow QLF', tagLine='EUW')
+st.write(puuid)
+
+list_puuid_test = ['ApGw0jnnexmrtyjhZ9LKR0Voq9QVGjOrO2TzGslcFgajnB09gTxHe5GncFlj5Ifw16ht8DG5w3vQhQ',
+                   'pYmXkPJ0XpFaOxx90TvmIvDovUnV199qzo4d8fq-D_c563W2w5gVK_1MZY0qqO_mI6Zo94THFHj_mg']
+st.write(api_get_match_history_puuid(list_puuid_test))
+
+#ApGw0jnnexmrtyjhZ9LKR0Voq9QVGjOrO2TzGslcFgajnB09gTxHe5GncFlj5Ifw16ht8DG5w3vQhQ GULLDIZ
+#pYmXkPJ0XpFaOxx90TvmIvDovUnV199qzo4d8fq-D_c563W2w5gVK_1MZY0qqO_mI6Zo94THFHj_mg SNOW
+
+
+st.write('')
+st.write('')
+st.write('')
+st.write('')
+st.write('')
+st.write('')
+st.write('')
+st.write('')
+st.write('')
+st.write('')
+st.write('')
+st.write('')
+st.write('')
+st.write('')
+
+'''
 # Create a random Pandas dataframe with existing tickets.
 if "df" not in st.session_state:
 
@@ -170,3 +190,4 @@ priority_plot = (
     )
 )
 st.altair_chart(priority_plot, use_container_width=True, theme="streamlit")
+'''
