@@ -1,4 +1,5 @@
 ### Imports 
+from multiprocessing import freeze_support
 import requests
 import pandas as pd
 from concurrent.futures import as_completed, ProcessPoolExecutor
@@ -7,7 +8,11 @@ from requests.adapters import HTTPAdapter
 import time
 from urllib3.util.retry import Retry
 from datetime import datetime
-
+import concurrent.futures
+from multiprocessing import freeze_support
+import json
+import traceback
+from supabase import create_client, Client
 from configparser import ConfigParser
 parser = ConfigParser()
 parser.read('config.ini')
@@ -36,30 +41,22 @@ def api_get_puuid(summonerId=None, gameName=None, tagLine=None, region='europe')
     """
     print('Retrieving for:',gameName)
 
-    if summonerId is not None:
-        root_url = 'https://europe.api.riotgames.com/'
-        endpoint = 'lol/summoner/v4/summoners/'
+    root_url = f'https://{region}.api.riotgames.com/'
+    endpoint = f'riot/account/v1/accounts/by-riot-id/{gameName}/{tagLine}'
 
-        response = requests.get(root_url+endpoint+summonerId+'?'+api_key)
-
+    response = requests.get(root_url+endpoint+'?'+api_key)
+    if response.status_code == 429:
+        print("Sleeping...")
+        time.sleep(121)
+        response = requests.get(root_url+endpoint+'?'+api_key)   
+    try:               
         return response.json()['puuid']
-    else:
-        root_url = f'https://{region}.api.riotgames.com/'
-        endpoint = f'riot/account/v1/accounts/by-riot-id/{gameName}/{tagLine}'
-    
-        response = requests.get(root_url+endpoint+'?'+api_key)
-        print(root_url+endpoint+'?'+api_key)
-        if response.status_code == 429:
-            print("Sleeping...")
-            time.sleep(121)
-            response = requests.get(root_url+endpoint+'?'+api_key)   
-        try:               
-            return response.json()['puuid']
-        except KeyError as e:
-            print('Puuid not retrieved, nickname must have changed')
-            return None
-      
+    except KeyError as e:
+        print('Puuid not retrieved, nickname must have changed')
+        return None
+ 
 def api_get_match_history_ids(puuid=None, region='europe', start=0, count=10):
+
     """Gets the match history ids for a given puuid.
 
     Args:
@@ -92,8 +89,9 @@ def api_get_match_history_ids(puuid=None, region='europe', start=0, count=10):
     except Exception as e:
         print(f"An error occurred: {e}")
         return False
-
+    
 def process_match_json_reporting(match_json):
+
     """Processes the match json into a dataframe.
 
     Args:
@@ -310,7 +308,7 @@ def api_get_match_history_puuid(list_puuid, region='europe', debug=False, report
     """
 
     # Set up a session with retry mechanisms
-    session = FuturesSession(executor=ProcessPoolExecutor(max_workers=10))
+    session = FuturesSession(executor=ProcessPoolExecutor(max_workers=15))
     retries = 5
     status_forcelist = [429]
     retry = Retry(
@@ -327,7 +325,6 @@ def api_get_match_history_puuid(list_puuid, region='europe', debug=False, report
 
     list_matchIds = []
     for player_puuid in list_puuid:
-        print(player_puuid)
         matchIds = api_get_match_history_ids(puuid=player_puuid)
         for id in matchIds: #append the value to the list_matchIds and not lists
             list_matchIds.append(id)
@@ -375,8 +372,11 @@ def api_get_match_history_puuid(list_puuid, region='europe', debug=False, report
         except: 
             None
         return df
-    
+        
     else:
         # If there are no new matches to process, print a message and return an empty DataFrame
         print(f'No matches')
         return pd.DataFrame()
+
+
+

@@ -15,7 +15,7 @@ st.set_page_config(page_title="Zerance Trinkets", page_icon="🎫")
 st.title("🎫 Zerance Trinkets")
 
 
-puuid = api_get_puuid(gameName='Cocow', tagLine='EUW')
+puuid = api_get_puuid(gameName='Sinerias', tagLine='EUW')
 st.write(puuid)
 
 list_puuid_test = ['ApGw0jnnexmrtyjhZ9LKR0Voq9QVGjOrO2TzGslcFgajnB09gTxHe5GncFlj5Ifw16ht8DG5w3vQhQ',
