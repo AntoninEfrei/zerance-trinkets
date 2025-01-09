@@ -22,7 +22,7 @@ def main():
 
 
     # list of nicknames 
-    list_nickname = ['Gulldiz#EUW','Snow QLF#EUW','Cocow#EUW']
+    list_nickname = ['Spiritual Realm#Shy','jué ji#00097','cant hold me#zeb','13 김수환#K13','enjawve#EUW']
 
     def nicknames_to_gamename_tagline(list_nicknames : list):
         """
@@ -44,9 +44,9 @@ def main():
             list_puuid.append(puuid)
         return list_puuid
 
-
+    # get puuid as list of players
     list_puuid_players = nicknames_to_gamename_tagline(list_nickname)
-
+    # get df of all games they played
     df_games = api_get_match_history_puuid(list_puuid_players)
 
     def from_df_to_db(df : pd.DataFrame, table = None):
@@ -87,7 +87,6 @@ def main():
                 # Optionally, print the stack trace for debugging
                 traceback.print_exc()
 
-
     from_df_to_db(df_games,'game_player')
 
 if __name__ == '__main__':
@@ -95,4 +94,4 @@ if __name__ == '__main__':
     multiprocessing.set_start_method('spawn')  # Optional if you want to set the start method explicitly
     main()
     
-
+## FIXME : check for duplicates match_id from db to not waste time -> make a query to db in list_match_ids? | check for the issue about not having 10 rows for all match_id in db

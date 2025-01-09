@@ -55,7 +55,7 @@ def api_get_puuid(summonerId=None, gameName=None, tagLine=None, region='europe')
         print('Puuid not retrieved, nickname must have changed')
         return None
  
-def api_get_match_history_ids(puuid=None, region='europe', start=0, count=10):
+def api_get_match_history_ids(puuid=None, region='europe', start=0, count=100):
 
     """Gets the match history ids for a given puuid.
 
